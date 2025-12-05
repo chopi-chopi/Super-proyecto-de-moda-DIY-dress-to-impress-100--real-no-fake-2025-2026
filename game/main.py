@@ -1,17 +1,21 @@
 # pantalla principal
 import pygame
+import settings
 
-pygame.init()
-screen = pygame.display.set_mode((1280,600))
+pygame.init(settings)
 running = True
+screen = settings.screen
 
-PINK = (255, 192, 203)
-LIGHT_GREEN = (144, 238, 144)
-WHITE = (255, 255, 255)
-font = pygame.font.SysFont("IBM 3270",74)
-button_rect = pygame.Rect(540, 200, 200, 100)
+# Colores y fuente
+PINK = settings.PINK
+LIGHT_GREEN = settings.LIGHT_GREEN
+WHITE = settings.WHITE
+font = settings.font
 
-def draw_button(surface, rect, text, mouse_pos):
+#definir boton(cualquier boton sera de este tamaño hasta que se diga lo contrario)
+button_rect = pygame.Rect(435, 200, 400, 100)
+
+def draw_button(surface, rect, text, mouse_pos): # dibuja boton con texto
 
     pygame.draw.rect(surface, PINK, rect)
     pygame.draw.rect(surface, LIGHT_GREEN, rect, 3)  # borde
@@ -20,13 +24,18 @@ def draw_button(surface, rect, text, mouse_pos):
     text_rect = text_surface.get_rect(center=rect.center)
     surface.blit(text_surface, text_rect)
 
-running = True
-while running:
+# Loop principal de la pantalla de título
+def start_screen():
+ while running == True:
+  while running:
     screen.fill(WHITE)
     mouse_pos = pygame.mouse.get_pos()
 
+    title_screen = font.render("KISS KISS FALL IN LOVE", True, PINK)
+
     # Dibujar botón
     draw_button(screen, button_rect, "Nuevo juego", mouse_pos)
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
