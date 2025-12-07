@@ -1,8 +1,10 @@
 # pantalla principal
+import os
+import importlib.util
 import pygame
-import settings
+from settings import settings, guardar_partida
 
-pygame.init(settings)
+pygame.init()
 running = True
 screen = settings.screen
 
@@ -13,7 +15,8 @@ WHITE = settings.WHITE
 font = settings.font
 
 #definir boton(cualquier boton sera de este tamaño hasta que se diga lo contrario)
-button_rect = pygame.Rect(435, 200, 400, 100)
+button_rect = pygame.Rect(435, 200, 400, 100) #los primeros dos son anchoxaltura, los otros son de posicion
+small_button_rect = pygame.Rect(220, 100, 200, 50)
 
 def draw_button(surface, rect, text, mouse_pos): # dibuja boton con texto
 
@@ -26,16 +29,20 @@ def draw_button(surface, rect, text, mouse_pos): # dibuja boton con texto
 
 # Loop principal de la pantalla de título
 def start_screen():
- while running == True:
-  while running:
-    screen.fill(WHITE)
-    mouse_pos = pygame.mouse.get_pos()
-
+    running = True
+    while running == True:
+     screen.fill(WHITE)
+     mouse_pos = pygame.mouse.get_pos()
+        # Render del título y dibujo en pantalla
     title_screen = font.render("KISS KISS FALL IN LOVE", True, PINK)
-
+    title_rect = title_screen.get_rect(center=(screen.get_width() // 2, 80))
+    screen.blit(title_screen, title_rect)
     # Dibujar botón
-    draw_button(screen, button_rect, "Nuevo juego", mouse_pos)
-
+    nuevo_juego = draw_button(screen, button_rect, "Nuevo juego", mouse_pos)
+    cargar_juego = draw_button(screen, small_button_rect, "Cargar juego", mouse_pos)
+    opciones = draw_button(screen, small_button_rect, "Opciones", mouse_pos)
+       
+    draw_button()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -47,4 +54,6 @@ def start_screen():
 
     pygame.display.flip() #esto hace que la cosa salga en pantalla, NO MOVER!!!!
 
-pygame.quit()
+if __name__ == '__main__':
+    start_screen()
+    pygame.quit()

@@ -14,9 +14,14 @@ while running:
 
     screen.fill("pink")
 
+def juego_loop():
+    def nuevo_juego(nuevo_juego, cargar_juego):
+
+    
+
     # RENDER YOUR GAME HERE
 
     # flip() the display to put your work on screen
-    pygame.display.flip()
+     pygame.display.flip()
 
 pygame.quit()
