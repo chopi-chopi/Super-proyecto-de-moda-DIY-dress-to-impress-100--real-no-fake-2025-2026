@@ -2,9 +2,10 @@
 import os
 import importlib.util
 import pygame
-from settings import settings, guardar_partida
+from game import nuevo_juego, cargar_juego, opciones
 
 pygame.init()
+from settings import settings
 running = True
 screen = settings.screen
 
@@ -13,9 +14,10 @@ PINK = settings.PINK
 LIGHT_GREEN = settings.LIGHT_GREEN
 WHITE = settings.WHITE
 font = settings.font
+MENU_MOUSE_POS = pygame.mouse.get_pos()
 
 #definir boton(cualquier boton sera de este tamaño hasta que se diga lo contrario)
-button_rect = pygame.Rect(435, 200, 400, 100) #los primeros dos son anchoxaltura, los otros son de posicion
+NUEVO_JUEGO = pygame.Rect(435, 200, 400, 100) #los primeros dos son anchoxaltura, los otros son de posicion
 small_button_rect = pygame.Rect(220, 100, 200, 50)
 
 def draw_button(surface, rect, text, mouse_pos): # dibuja boton con texto
@@ -30,29 +32,36 @@ def draw_button(surface, rect, text, mouse_pos): # dibuja boton con texto
 # Loop principal de la pantalla de título
 def start_screen():
     running = True
-    while running == True:
-     screen.fill(WHITE)
-     mouse_pos = pygame.mouse.get_pos()
-        # Render del título y dibujo en pantalla
-    title_screen = font.render("KISS KISS FALL IN LOVE", True, PINK)
-    title_rect = title_screen.get_rect(center=(screen.get_width() // 2, 80))
-    screen.blit(title_screen, title_rect)
-    # Dibujar botón
-    nuevo_juego = draw_button(screen, button_rect, "Nuevo juego", mouse_pos)
-    cargar_juego = draw_button(screen, small_button_rect, "Cargar juego", mouse_pos)
-    opciones = draw_button(screen, small_button_rect, "Opciones", mouse_pos)
-       
-    draw_button()
+    CARGAR_JUEGO = pygame.Rect(435, 320, 200, 50)  
+    OPCIONES = pygame.Rect(635, 320, 200, 50)
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if NUEVO_JUEGO.collidepoint(event.pos):
+                    nuevo_juego()
+                elif CARGAR_JUEGO.collidepoint(event.pos):
+                    cargar_juego()
+                elif OPCIONES.collidepoint(event.pos):
+                    opciones()
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if button_rect.collidepoint(event.pos):
-                print("¡Botón de inicio presionado!")
-                # Aquí puedes cambiar de pantalla o iniciar el juego
+        # Render por frame
+        screen.fill(WHITE)
 
-    pygame.display.flip() #esto hace que la cosa salga en pantalla, NO MOVER!!!!
+        # Render del título
+        title_screen = font.render("KISS KISS FALL IN LOVE", True, PINK)
+        title_rect = title_screen.get_rect(center=(screen.get_width() // 2, 80))
+        screen.blit(title_screen, title_rect)
+
+        # Dibujar botones
+        draw_button(screen, NUEVO_JUEGO, "Nuevo juego", MENU_MOUSE_POS)
+        draw_button(screen, CARGAR_JUEGO, "Cargar juego", MENU_MOUSE_POS)
+        draw_button(screen, OPCIONES, "Opciones", MENU_MOUSE_POS)
+
+        pygame.display.flip()
+
+
 
 if __name__ == '__main__':
     start_screen()

@@ -1,27 +1,22 @@
 #codigo principal¿
 import pygame
+import settings
 
 pygame.init()
-screen = pygame.display.set_mode((1280,600))
+screen = pygame.display.set_mode((1200,600))
 running = True
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+def nuevo_juego():
+ pygame.display.set_caption ("Jugar")
+ screen.fill("pink")
 
-            running = False
+def cargar_juego():  
+  ...
 
-
-    screen.fill("pink")
-
-def juego_loop():
-    def nuevo_juego(nuevo_juego, cargar_juego):
-
-    
+def opciones():  
 
     # RENDER YOUR GAME HERE
 
-    # flip() the display to put your work on screen
-     pygame.display.flip()
+       pygame.display.flip()
 
-pygame.quit()
+#pygame.quit()
