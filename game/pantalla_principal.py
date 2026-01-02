@@ -2,7 +2,6 @@
 import os
 import importlib.util
 import pygame
-from game import nuevo_juego, cargar_juego, opciones
 
 pygame.init()
 from settings import settings
@@ -16,53 +15,67 @@ WHITE = settings.WHITE
 font = settings.font
 MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-#definir boton(cualquier boton sera de este tamaño hasta que se diga lo contrario)
-NUEVO_JUEGO = pygame.Rect(435, 200, 400, 100) #los primeros dos son anchoxaltura, los otros son de posicion
-small_button_rect = pygame.Rect(220, 100, 200, 50)
-
-def draw_button(surface, rect, text, mouse_pos): # dibuja boton con texto
-
-    pygame.draw.rect(surface, PINK, rect)
-    pygame.draw.rect(surface, LIGHT_GREEN, rect, 3)  # borde
-
-    text_surface = font.render(text, True, WHITE)
-    text_rect = text_surface.get_rect(center=rect.center)
-    surface.blit(text_surface, text_rect)
-
 # Loop principal de la pantalla de título
 def start_screen():
     running = True
-    CARGAR_JUEGO = pygame.Rect(435, 320, 200, 50)  
-    OPCIONES = pygame.Rect(635, 320, 200, 50)
+    NUEVO_JUEGO = settings.BOTONES(None, (640, 250), "NUEVO JUEGO", font, PINK, LIGHT_GREEN)
+    CARGAR_JUEGO = settings.BOTONES(None, (640, 320), "CARGAR JUEGO", font, PINK, LIGHT_GREEN)
+    OPCIONES = settings.BOTONES(None, (640, 390), "OPCIONES", font, PINK, LIGHT_GREEN)
     while running:
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if NUEVO_JUEGO.collidepoint(event.pos):
-                    nuevo_juego()
-                elif CARGAR_JUEGO.collidepoint(event.pos):
-                    cargar_juego()
-                elif OPCIONES.collidepoint(event.pos):
-                    opciones()
-
+            elif event.type == pygame.MOUSEBUTTONDOWN: 
+                if NUEVO_JUEGO.checkForInput(event.pos):
+                 nuevo_juego()
+                elif CARGAR_JUEGO.checkForInput(event.pos):
+                 cargar_juego()
+                elif OPCIONES.checkForInput(event.pos):
+                 opciones()
+    
         # Render por frame
-        screen.fill(WHITE)
+        screen.fill(LIGHT_GREEN)
 
         # Render del título
         title_screen = font.render("KISS KISS FALL IN LOVE", True, PINK)
         title_rect = title_screen.get_rect(center=(screen.get_width() // 2, 80))
         screen.blit(title_screen, title_rect)
 
-        # Dibujar botones
-        draw_button(screen, NUEVO_JUEGO, "Nuevo juego", MENU_MOUSE_POS)
-        draw_button(screen, CARGAR_JUEGO, "Cargar juego", MENU_MOUSE_POS)
-        draw_button(screen, OPCIONES, "Opciones", MENU_MOUSE_POS)
+        NUEVO_JUEGO.changeColor(MENU_MOUSE_POS)
+        NUEVO_JUEGO.update(screen)
+        CARGAR_JUEGO.changeColor(MENU_MOUSE_POS)
+        CARGAR_JUEGO.update(screen)
+        OPCIONES.changeColor(MENU_MOUSE_POS)
+        OPCIONES.update(screen)
 
         pygame.display.flip()
 
+def nuevo_juego():
+    while True:
+     PLAY_MOUSE_POS = pygame.mouse.get_pos()
+     screen.fill("pink")
+     screen.blit(font.render("prueba jiji", True, WHITE), (400,300))
+
+def cargar_juego():
+    while True:
+       LOAD_MOUSE_POS = pygame.mouse.get_pos()
+
+def opciones():
+    while True: 
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+        screen.fill("lightblue")
+        screen.blit(font.render("opciones", True, WHITE), (500,300))
 
 
 if __name__ == '__main__':
-    start_screen()
-    pygame.quit()
+    current_screen = "inicio"
+    while True:
+     if current_screen == 'menu':
+            current_screen = start_screen()
+     elif current_screen == 'nuevo_juego':
+            current_screen = nuevo_juego()
+     elif current_screen == 'cargar':
+            current_screen = cargar_juego()
+     elif current_screen == 'opciones':
+            current_screen = opciones()
