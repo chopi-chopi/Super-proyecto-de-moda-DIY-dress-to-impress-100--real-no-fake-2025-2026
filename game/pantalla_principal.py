@@ -1,4 +1,4 @@
-# pantalla principal
+3# pantalla principal
 import pygame
 import settings
 
