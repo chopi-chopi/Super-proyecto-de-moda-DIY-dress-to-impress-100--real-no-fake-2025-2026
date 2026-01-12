@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 3# pantalla principal
+=======
+# pantalla principal
+import os
+import importlib.util
+>>>>>>> d9dea0765d5ad888c083b5430e217881b01136f5
 import pygame
-import settings
 
-pygame.init(settings)
+pygame.init()
+current_screen = "menu"
+from settings import settings
 running = True
 screen = settings.screen
 
@@ -11,40 +18,78 @@ PINK = settings.PINK
 LIGHT_GREEN = settings.LIGHT_GREEN
 WHITE = settings.WHITE
 font = settings.font
-
-#definir boton(cualquier boton sera de este tamaño hasta que se diga lo contrario)
-button_rect = pygame.Rect(435, 200, 400, 100)
-
-def draw_button(surface, rect, text, mouse_pos): # dibuja boton con texto
-
-    pygame.draw.rect(surface, PINK, rect)
-    pygame.draw.rect(surface, LIGHT_GREEN, rect, 3)  # borde
-
-    text_surface = font.render(text, True, WHITE)
-    text_rect = text_surface.get_rect(center=rect.center)
-    surface.blit(text_surface, text_rect)
+MENU_MOUSE_POS = pygame.mouse.get_pos()
 
 # Loop principal de la pantalla de título
 def start_screen():
- while running == True:
-  while running:
-    screen.fill(WHITE)
-    mouse_pos = pygame.mouse.get_pos()
+    global running
+    global current_screen
+    NUEVO_JUEGO = settings.BOTONES(None, (640, 250), "NUEVO JUEGO", font, PINK, LIGHT_GREEN)
+    CARGAR_JUEGO = settings.BOTONES(None, (640, 320), "CARGAR JUEGO", font, PINK, LIGHT_GREEN)
+    OPCIONES = settings.BOTONES(None, (640, 390), "OPCIONES", font, PINK, LIGHT_GREEN)
+    while running and current_screen == "menu":
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN: 
+                if NUEVO_JUEGO.checkForInput(event.pos):
+                 current_screen = "nuevo_juego"
+                 break
+                elif CARGAR_JUEGO.checkForInput(event.pos):
+                 current_screen = "cargar_juego"
+                 break
+                elif OPCIONES.checkForInput(event.pos):
+                 current_screen = "opciones"
+                 break 
+    
+        # Render por frame
+        screen.fill(LIGHT_GREEN)
 
-    title_screen = font.render("KISS KISS FALL IN LOVE", True, PINK)
+        # Render del título
+        title_screen = font.render("KISS KISS FALL IN LOVE", True, PINK)
+        title_rect = title_screen.get_rect(center=(screen.get_width() // 2, 80))
+        screen.blit(title_screen, title_rect)
 
-    # Dibujar botón
-    draw_button(screen, button_rect, "Nuevo juego", mouse_pos)
+        NUEVO_JUEGO.changeColor(MENU_MOUSE_POS)
+        NUEVO_JUEGO.update(screen)
+        CARGAR_JUEGO.changeColor(MENU_MOUSE_POS)
+        CARGAR_JUEGO.update(screen)
+        OPCIONES.changeColor(MENU_MOUSE_POS)
+        OPCIONES.update(screen)
+
+        pygame.display.flip()
+
+def nuevo_juego():
+    while running and current_screen == "nuevo_juego":
+     PLAY_MOUSE_POS = pygame.mouse.get_pos()
+     screen.fill("pink")
+     screen.blit(font.render("prueba jiji", True, WHITE), (400,300))
+
+     pygame.display.flip()
+
+def cargar_juego():
+    while running and current_screen == "cargar_juego":
+        LOAD_MOUSE_POS = pygame.mouse.get_pos()
+
+        pygame.display.flip()
+
+def opciones():
+    while running and current_screen == "opciones":
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+        screen.fill("lightblue")
+        screen.blit(font.render("opciones", True, WHITE), (500,300))
+
+        pygame.display.flip()
 
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if button_rect.collidepoint(event.pos):
-                print("¡Botón de inicio presionado!")
-                # Aquí puedes cambiar de pantalla o iniciar el juego
-
-    pygame.display.flip() #esto hace que la cosa salga en pantalla, NO MOVER!!!!
-
-pygame.quit()
+if __name__ == '__main__':
+    while running:
+        if current_screen == 'menu':
+            start_screen()
+        elif current_screen == 'nuevo_juego':
+            nuevo_juego()
+        elif current_screen == 'cargar':
+            cargar_juego()
+        elif current_screen == 'opciones':
+            opciones()

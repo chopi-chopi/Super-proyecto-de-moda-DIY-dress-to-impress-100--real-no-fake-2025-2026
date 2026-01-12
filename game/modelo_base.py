@@ -1,4 +1,6 @@
 ## pruebita del modelo, PREGUNTAR!!!!
+# hellooooo, este es el codigo del modelo antiguo, cuando pongan el nuevo cambien los nombres aca
+# DESPUES BORREN EL OTRO PORQUE SINO EXPLOTA
 """Modelo base: sprite con carga segura de imagen desde la carpeta assets.
 
 Para usar una imagen desde tu PC, copia el archivo (por ejemplo: modelo_base.png)
