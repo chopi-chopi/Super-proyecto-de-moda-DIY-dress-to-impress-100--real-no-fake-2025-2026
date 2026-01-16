@@ -10,10 +10,14 @@ LIGHT_GREEN = (144, 238, 144)
 WHITE = (255, 255, 255)
 GREY = (200, 200, 200)
 
-font = pygame.font.SysFont('Arial', 48)
-
-import os, pygame
-screen = pygame.display.set_mode((1280,600))
+# intentar cargar la fuente Daydream desde assets; usar fallback si no está
+font_path = os.path.normpath(os.path.join(
+	os.path.dirname(__file__), '..', '..', 'assets', 'daydream_3', 'Daydream DEMO.otf'
+))
+try:
+	font = pygame.font.Font(font_path, 36)
+except Exception:
+	font = pygame.font.SysFont(None, 36)
 
 def guardar_partida(self, data, juego_nuevo):
     import pantalla_principal
