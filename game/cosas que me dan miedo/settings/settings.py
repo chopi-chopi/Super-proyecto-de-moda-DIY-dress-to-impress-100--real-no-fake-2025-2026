@@ -15,9 +15,9 @@ font_path = os.path.normpath(os.path.join(
 	os.path.dirname(__file__), '..', '..', 'assets', 'daydream_3', 'Daydream DEMO.otf'
 ))
 try:
-	font = pygame.font.Font(font_path, 36)
+	font = pygame.font.Font(font_path, 29)
 except Exception:
-	font = pygame.font.SysFont(None, 36)
+	font = pygame.font.SysFont(None, 29)
 
 def guardar_partida(self, data, juego_nuevo):
     import pantalla_principal
