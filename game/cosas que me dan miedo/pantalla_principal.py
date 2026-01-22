@@ -1,6 +1,7 @@
 import pygame
 import os
 
+
 pygame.init()
 current_screen = "menu"
 from settings import settings
@@ -119,7 +120,8 @@ def nuevo_juego():
 def cargar_juego():
     while running and current_screen == "cargar_juego":
         LOAD_MOUSE_POS = pygame.mouse.get_pos()
-
+        screen.fill("lightblue")
+        screen.blit(font.render("cargar juego", True, WHITE), (500,300))
         pygame.display.flip()
 
 def opciones():
