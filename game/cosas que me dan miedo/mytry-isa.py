@@ -1,5 +1,7 @@
 import pygame
 import os
+import sys
+import webbrowser
 
 pygame.init()
 current_screen = "menu"
@@ -192,15 +194,22 @@ def cargar_juego():
     while running and current_screen == "cargar_juego":
         LOAD_MOUSE_POS = pygame.mouse.get_pos()
         screen.fill("lightblue")
-        screen.blit(font.render("cargar juego", True, WHITE), (500,300))
+        screen.blit(font.render("cargar juego", True, WHITE), (450,600))
         pygame.display.flip()
+        texto = (None, (605, 240), "sorprecita", font, PINK, LIGHT_GREEN)
+        url = "https://youtu.be/aajKBmESmHg?si=b4HKETPbTiR268Z5"
+        texto_render = font.render(texto[2], True, WHITE)
+
+        # Detectar clic en el texto
+        if event.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+            if texto_rect.collidepoint(evento.pos):
+                webbrowser.open(url)  # Abrir enlace en navegador
 
 def opciones():
     while running and current_screen == "opciones":
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         screen.fill("lightblue")
-        screen.blit(font.render("opciones", True, WHITE), (500,300))
-
+        screen.blit(font.render("opciones", True, WHITE), (450,600))
         pygame.display.flip()
 
 if __name__ == '__main__':
@@ -209,7 +218,7 @@ if __name__ == '__main__':
             start_screen()
         elif current_screen == 'nuevo_juego':
             nuevo_juego()
-        elif current_screen == 'cargar':
+        elif current_screen == 'cargar_juego':
             cargar_juego()
         elif current_screen == 'opciones':
             opciones()
