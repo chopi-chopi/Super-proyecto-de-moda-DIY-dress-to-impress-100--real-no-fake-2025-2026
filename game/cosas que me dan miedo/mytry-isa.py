@@ -2,6 +2,7 @@ import pygame
 import os
 
 pygame.init()
+pygame.mixer.init()
 current_screen = "menu"
 from settings import settings
 running = True
@@ -46,6 +47,7 @@ def start_screen():
     
     while running and current_screen == "menu":
         MENU_MOUSE_POS = pygame.mouse.get_pos()
+        cancion_fondo = settings.MusicaFondo()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -79,6 +81,7 @@ def start_screen():
 def nuevo_juego():
     global running
     global current_screen
+
     
     #fondo de pantalla
     base_dir = os.path.dirname(__file__)
@@ -228,8 +231,7 @@ def nuevo_juego():
 
 
 
-    selection_cloth = None
-    selection_cloth_rect = overlay_rect.copy() if overlay_rect else None
+    worn_clothes = [] # Lista para almacenar las prendas puestas
 
     selected_subdir = None
     toggle_buttons = []
@@ -247,9 +249,13 @@ def nuevo_juego():
                     current_screen = "menu" 
                     break
                 elif event.key == pygame.K_SPACE:
+                    worn_clothes = [] # Limpiar ropa con espacio
                     selected_subdir = None
                     toggle_buttons = []
                     toggle_images = []
+                elif event.key == pygame.K_BACKSPACE: # Tecla Borrar para quitar la última prenda
+                    if worn_clothes:
+                        worn_clothes.pop()
             
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button ==1:
                 # checkear botones de previous and next
@@ -299,7 +305,6 @@ def nuevo_juego():
                                     rect_toggle = pygame.Rect(tx, ty + i*65, 80, 80)
                                     toggle_buttons.append(rect_toggle)
                                 # Reset 
-                                selection_cloth = None
                                 thumbnail_clicked = True
                                 break
                         # Check toggle buttons 
@@ -309,15 +314,16 @@ def nuevo_juego():
                                     path = cloth_paths_page[selected_subdir][i]
                                     print("Cargando:", path)
                                     try:
-                                        selection_cloth = pygame.image.load(path).convert_alpha()
-                                        selection_cloth = pygame.transform.smoothscale(selection_cloth, (450, 600))
-                                        selection_cloth_rect = overlay_rect
+                                        new_cloth = pygame.image.load(path).convert_alpha()
+                                        new_cloth = pygame.transform.smoothscale(new_cloth, (450, 600))
+                                        worn_clothes.append(new_cloth)
                                     except Exception as e:
                                         print(f"No se pudo cargar la imagen de ropa: {path} -> {e}")
                                     # Hide toggles
                                     selected_subdir = None
                                     toggle_buttons = []
                                     toggle_images = []
+                                    break # Salir del bucle tras seleccionar una prenda
 
                 
         screen.blit(fondo, (0, 0))
@@ -336,8 +342,9 @@ def nuevo_juego():
             for i, img in enumerate(toggle_images):
                 screen.blit(img, toggle_buttons[i])
 
-        if selection_cloth and selection_cloth_rect:
-            screen.blit(selection_cloth, selection_cloth_rect)
+        if overlay_rect:
+            for cloth in worn_clothes:
+                screen.blit(cloth, overlay_rect)
 
         # Update buttons
         prev_button.changeColor(PLAY_MOUSE_POS)
@@ -352,10 +359,8 @@ def nuevo_juego():
        
 
 def cargar_juego():
-    while running and current_screen == "cargar":
+    while running and current_screen == "cargar_juego":
         LOAD_MOUSE_POS = pygame.mouse.get_pos()
-        screen.fill("lightblue")
-        screen.blit(font.render("cargar juego", True, WHITE), (500,300))
 
         pygame.display.flip()
 

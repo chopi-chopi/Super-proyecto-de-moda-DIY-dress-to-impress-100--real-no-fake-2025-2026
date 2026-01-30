@@ -1,7 +1,8 @@
 import os
 import pygame
 
-pygame.font.init()
+pygame.font.init() #44100                                    #
+pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=16384)
 
 screen = pygame.display.set_mode((1200,600))
 # Colores y fuente
@@ -20,7 +21,6 @@ except Exception:
 	font = pygame.font.SysFont(None, 29)
 
 def guardar_partida(self, data, juego_nuevo):
-    import pantalla_principal
     self._data = data
     self._juego_nuevo = juego_nuevo
     partidas = []
@@ -60,13 +60,19 @@ class BOTONES():
 		else:
 			self.text = self.font.render(self.text_input, True, self.base_color)
 
+#def cargar_sonido (self, ruta_sonido):
+		#try:
+		#	return pygame.mixer.music.load(ruta_sonido) #
+		#except pygame.error as error:
+		#	print("no se pudo cargar el archivo")
+		#	return None
 
+RUTA_CANCION = os.path.normpath(os.path.join(
+			os.path.dirname(__file__), '..', '..', 'assets', 'musica', 'kiss kiss fall in love.mp3'))
 
-
-
-
-
-
-
-
-
+class MusicaFondo:
+		pygame.mixer.init()
+		pygame.mixer.music.load(RUTA_CANCION)
+		pygame.mixer.music.play(-1)
+		pygame.mixer.music.set_volume(0.5)
+		#self.cancion_fondo.fadeout(10000000)
