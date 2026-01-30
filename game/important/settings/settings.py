@@ -16,8 +16,13 @@ font_path = os.path.normpath(os.path.join(
 ))
 try:
 	font = pygame.font.Font(font_path, 29)
+	# fuentes con tamaños específicos para título y botones
+	fonts = pygame.font.Font(font_path, 28)
+	
 except Exception:
 	font = pygame.font.SysFont(None, 29)
+	fonts = pygame.font.SysFont(None, 28)
+	
 
 def guardar_partida(self, data, juego_nuevo):
     import pantalla_principal
