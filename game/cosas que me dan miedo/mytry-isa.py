@@ -151,6 +151,14 @@ def nuevo_juego():
     small_font = pygame.font.Font(os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "assets", "daydream_3", "Daydream DEMO.otf")), 20)
     prev_button = settings.BOTONES(None, (770, 540), "PREV", small_font, WHITE, GREY)
     next_button = settings.BOTONES(None, (960, 540), "NEXT", small_font, WHITE, GREY)
+    # load trash icon for clear button (replace text with image)
+    clear_img = None
+    try:
+        clear_img = pygame.image.load(os.path.join(base_dir, "..", "assets", "BOTONES-interactivos", "boton_basura.png")).convert_alpha()
+        clear_img = pygame.transform.smoothscale(clear_img, (33, 33))
+    except Exception as e:
+        print(f"Error cargando boton_basura: {e}")
+    clear_all_button = settings.BOTONES(clear_img, (496, 285), "", small_font, WHITE, GREY)
 
     cloth_paths_page = []  # lista
     thumb_paths = []
@@ -271,6 +279,12 @@ def nuevo_juego():
                     selected_subdir = None
                     toggle_buttons = []
                     toggle_images = []
+                elif clear_all_button.checkForInput(event.pos):
+                    # Clear all worn clothes immediately
+                    worn_clothes = []
+                    selected_subdir = None
+                    toggle_buttons = []
+                    toggle_images = []
                 else:
                     # change body boton
                     if change_body_button.checkForInput(event.pos):
@@ -351,6 +365,8 @@ def nuevo_juego():
         prev_button.update(screen)
         next_button.changeColor(PLAY_MOUSE_POS)
         next_button.update(screen)
+        clear_all_button.changeColor(PLAY_MOUSE_POS)
+        clear_all_button.update(screen)
         change_body_button.changeColor(PLAY_MOUSE_POS)
         change_body_button.update(screen)
 
