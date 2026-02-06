@@ -130,9 +130,21 @@ def nuevo_juego():
         print(f"Error cargando la imagen: {e}")
     change_bottom_button = settings.BOTONES(change_bottom_img, (200, 210), "", small_font, WHITE, GREY)
 
-    #imagen de ropa-N cantidad de ropa
-    N = "TORSO"
-    N_dir = os.path.join(base_dir, "..", "assets", "ROPA", N)
+    # Category mapping (top UI buttons)
+    category_buttons = [
+        ("PELOS", os.path.join(base_dir, "..", "assets", "PELOS")),
+        ("TORSO", os.path.join(base_dir, "..", "assets", "ROPA", "TORSO")),
+        ("PIERNAS", os.path.join(base_dir, "..", "assets", "ROPA", "PIERNAS")),
+        ("BODY", os.path.join(base_dir, "..", "assets", "ROPA", "BODY")),
+        ("ACCESORIOS", os.path.join(base_dir, "..", "assets", "ROPA", "ACCESORIOS")),
+        ("ZAPATOS", os.path.join(base_dir, "..", "assets", "ROPA", "ZAPATOS")),
+    ]
+
+    # Start with TORSO by default
+    current_category_idx = 1
+    N, N_dir = category_buttons[current_category_idx]
+
+    # build list of subdirectories for the selected category
     subdirs = []
     try:
         for item in os.listdir(N_dir):
@@ -145,7 +157,7 @@ def nuevo_juego():
     subdirs.sort()  # Ordenar las subcarpetas para consistencia
     per_page = 6
     current_page = 0
-    total_pages = (len(subdirs) + per_page - 1) // per_page
+    total_pages = (len(subdirs) + per_page - 1) // per_page if subdirs else 0
 
     # botones
     small_font = pygame.font.Font(os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "assets", "daydream_3", "Daydream DEMO.otf")), 20)
@@ -236,6 +248,11 @@ def nuevo_juego():
                 button_images.append(img)
             except Exception as e:
                 print(f"No se pudo cargar botón UI: {path} -> {e}")
+    # create rects for top UI buttons (match blit positions below)
+    button_rects = []
+    for i in range(len(button_images)):
+        x = 545 + i * 110
+        button_rects.append(pygame.Rect(x, 14, 90, 90))
 
 
 
@@ -286,6 +303,32 @@ def nuevo_juego():
                     toggle_buttons = []
                     toggle_images = []
                 else:
+                    # top UI category buttons
+                    handled_top_button = False
+                    for i, rect_btn in enumerate(button_rects):
+                        if rect_btn.collidepoint(event.pos):
+                            if i < len(category_buttons):
+                                N, N_dir = category_buttons[i]
+                                # rebuild subdirs for the new category
+                                subdirs = []
+                                try:
+                                    for item in os.listdir(N_dir):
+                                        item_path = os.path.join(N_dir, item)
+                                        if os.path.isdir(item_path):
+                                            subdirs.append(item)
+                                except Exception as e:
+                                    subdirs = []
+                                subdirs.sort()
+                                current_page = 0
+                                total_pages = (len(subdirs) + per_page - 1) // per_page if subdirs else 0
+                                load_page()
+                                selected_subdir = None
+                                toggle_buttons = []
+                                toggle_images = []
+                            handled_top_button = True
+                            break
+                    if handled_top_button:
+                        pass
                     # change body boton
                     if change_body_button.checkForInput(event.pos):
                         if body_paths:
